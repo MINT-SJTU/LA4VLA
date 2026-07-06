@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.egg
+dist/
+build/
+
+# Datasets & caches
+*.pkl
+*.parquet
+*.mp4
+*.avi
+
+# Training artifacts
+wandb/
+swanlab_logs/
+logs/
+checkpoints/
+*.pt
+*.pth
+*.safetensors
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Misc
+*.log
+episode_videos/
+inspect_frames/
+eval_result/

@@ -1,0 +1,34 @@
+# ============================================================
+# LA4VLA Dataset Configuration
+# ============================================================
+# This is the example config for LA pre-training with the LA-33K dataset.
+# Do NOT change max_action_dim, max_state_dim, max_views.
+#
+# For downstream finetuning (e.g., LIBERO, MetaWorld), create a
+# separate config file with the appropriate data_groups.
+# ============================================================
+
+max_action_dim: 24
+max_state_dim: 24
+max_views: 3
+normalization_type: bounds  # options: bounds, normal, bounds_q99
+datasets_manifest: la33k_pretrain.pkl
+
+decoder_cache_size: 16             # video decoder cache size
+cache_shard_size_bytes: 268435456  # shard size for caching decoded videos, default 256MB
+
+data_groups:
+  franka_eef:
+    la33k:
+      path: /your/path/to/LA-33K  # <- set this to your local LA-33K dataset path
+      view_map:
+        image_1: observation.images.exterior_1_left
+        image_2: observation.images.wrist_left
+        image_3: observation.images.exterior_2_left
+      use_delta_action: True
+      process_suite: droid_eef
+      suite_config:
+        state_key: observation.state.cartesian_position
+        action_key: action.cartesian_position
+        action_gripper_key: action.gripper_position
+        state_gripper_key: observation.state.gripper_position
