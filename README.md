@@ -6,7 +6,11 @@
 
 <p align="center">
   <a href="https://arxiv.org/abs/2606.27295"><img src="https://img.shields.io/badge/arXiv-2606.27295-b31b1b.svg" alt="arXiv"></a>
-  <a href="https://huggingface.co/datasets/MINT-SJTU/LA-33K"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Dataset-LA--33K-yellow" alt="Dataset"></a>
+  <a href="https://huggingface.co/MINT-SJTU/starvla_qwenpiv3_la_pretrain"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Model-StarVLA%20LA--Pretrain-blue" alt="StarVLA LA Pretrain"></a>
+  <a href="https://huggingface.co/MINT-SJTU/starvla_metaworld_qwenpiv3_la_finetune"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Model-MetaWorld%20LA--FT-blue" alt="MetaWorld LA Finetune"></a>
+  <a href="https://huggingface.co/MINT-SJTU/starvla_metaworld_qwenpiv3_baseline_finetune"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Model-MetaWorld%20Baseline--FT-blue" alt="MetaWorld Baseline Finetune"></a>
+  <a href="https://huggingface.co/datasets/MINT-SJTU/LA-33K"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Dataset-LA--33K-yellow" alt="LA-33K Dataset"></a>
+  <a href="https://huggingface.co/datasets/MINT-SJTU/LA-33K-V"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Dataset-LA--33K--V-yellow" alt="LA-33K-V Dataset"></a>
   <a href="#"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License"></a>
 </p>
 
@@ -14,13 +18,28 @@
 
 > 📄 **Paper:** [LA4VLA: Language-Action Pre-Training for Vision-Language-Action Models](https://arxiv.org/abs/2606.27295)
 >
-> 🤗 **Dataset:** [LA-33K on Hugging Face](https://huggingface.co/datasets/MINT-SJTU/LA-33K) — 33K robot manipulation episodes for LA pre-training
+> 🤗 **Models:**
+> [StarVLA LA pre-training checkpoint](https://huggingface.co/MINT-SJTU/starvla_qwenpiv3_la_pretrain) —— pre-trained model on LA-33K for downstream finetuning
+> [StarVLA MetaWorld fine-tuned checkpoint with LA pre-training](https://huggingface.co/MINT-SJTU/starvla_metaworld_qwenpiv3_la_finetune) —— fine-tuned on MetaWorld after LA pre-training
+> [StarVLA MetaWorld fine-tuned checkpoint without LA pre-training](https://huggingface.co/MINT-SJTU/starvla_metaworld_qwenpiv3_baseline_finetune) —— fine-tuned on MetaWorld without LA pre-training (baseline)
+>
+> 🤗 **Datasets:**
+> [LA-33K on Hugging Face](https://huggingface.co/datasets/MINT-SJTU/LA-33K) — 33K robot manipulation episodes for LA pre-training 
+> [LA-33K-V on Hugging Face](https://huggingface.co/datasets/MINT-SJTU/LA-33K-V) — visual version of the LA dataset
+
+---
+
+## 📰 News
+
+- 🗓️ **2026-07-16** — Release pretrain & Metaworld model weights to huggingface, release LA-33K-V dataset.
+- 🗓️ **2026-07-06** — Release official model code & LA-33K dataset.
 
 ---
 
 ## 📑 Table of Contents
 
 - [LA4VLA](#la4vla)
+  - [📰 News](#-news)
   - [📑 Table of Contents](#-table-of-contents)
   - [⚙️ Installation](#️-installation)
   - [🧠 LA Pre-training](#-la-pre-training)
