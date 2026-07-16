@@ -8,6 +8,19 @@
 # separate config file with the appropriate data_groups.
 # ============================================================
 
+# Below is a template for creating a config YAML for mixed training with both LA and VLA datasets. You can copy this template and modify it to include your own datasets.
+#
+# data groups：
+#   arm key：# different robot arms have different arm keys
+#     dataset key：# different datasets have different dataset keys
+#       path：# specify the path to the dataset
+#       view_map: # mapping from dataset view names to model input view names
+#       use_delta_action: # whether to transform the action to delta action, default is False
+#       process_suite: # choose the suite to process the dataset
+#       suite_config: # optional, use default suite config if not specified
+
+# ============================================================
+
 max_action_dim: 24
 max_state_dim: 24
 max_views: 3

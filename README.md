@@ -6,7 +6,11 @@
 
 <p align="center">
   <a href="https://arxiv.org/abs/2606.27295"><img src="https://img.shields.io/badge/arXiv-2606.27295-b31b1b.svg" alt="arXiv"></a>
-  <a href="https://huggingface.co/datasets/MINT-SJTU/LA-33K"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Dataset-LA--33K-yellow" alt="Dataset"></a>
+  <a href="https://huggingface.co/MINT-SJTU/starvla_qwenpiv3_la_pretrain"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Model-StarVLA%20LA--Pretrain-blue" alt="StarVLA LA Pretrain"></a>
+  <a href="https://huggingface.co/MINT-SJTU/starvla_metaworld_qwenpiv3_la_finetune"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Model-MetaWorld%20LA--FT-blue" alt="MetaWorld LA Finetune"></a>
+  <a href="https://huggingface.co/MINT-SJTU/starvla_metaworld_qwenpiv3_baseline_finetune"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Model-MetaWorld%20Baseline--FT-blue" alt="MetaWorld Baseline Finetune"></a>
+  <a href="https://huggingface.co/datasets/MINT-SJTU/LA-33K"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Dataset-LA--33K-yellow" alt="LA-33K Dataset"></a>
+  <a href="https://huggingface.co/datasets/MINT-SJTU/LA-33K-V"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Dataset-LA--33K--V-yellow" alt="LA-33K-V Dataset"></a>
   <a href="#"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License"></a>
 </p>
 
@@ -14,20 +18,46 @@
 
 > 📄 **Paper:** [LA4VLA: Language-Action Pre-Training for Vision-Language-Action Models](https://arxiv.org/abs/2606.27295)
 >
-> 🤗 **Dataset:** [LA-33K on Hugging Face](https://huggingface.co/datasets/MINT-SJTU/LA-33K) — 33K robot manipulation episodes for LA pre-training
+> 🤗 **Models:**
+> [StarVLA LA pre-training checkpoint](https://huggingface.co/MINT-SJTU/starvla_qwenpiv3_la_pretrain) —— pre-trained model on LA-33K for downstream finetuning
+> [StarVLA MetaWorld fine-tuned checkpoint with LA pre-training](https://huggingface.co/MINT-SJTU/starvla_metaworld_qwenpiv3_la_finetune) —— fine-tuned on MetaWorld after LA pre-training
+> [StarVLA MetaWorld fine-tuned checkpoint without LA pre-training](https://huggingface.co/MINT-SJTU/starvla_metaworld_qwenpiv3_baseline_finetune) —— fine-tuned on MetaWorld without LA pre-training (baseline)
+>
+> 🤗 **Datasets:**
+> [LA-33K on Hugging Face](https://huggingface.co/datasets/MINT-SJTU/LA-33K) — 33K robot manipulation episodes for LA pre-training 
+> [LA-33K-V on Hugging Face](https://huggingface.co/datasets/MINT-SJTU/LA-33K-V) — visual version of the LA dataset
+
+---
+
+## 📰 News
+
+- 🗓️ **2026-07-16** — Release pretrain & Metaworld model weights to huggingface, release LA-33K-V dataset.
+- 🗓️ **2026-07-06** — Release official model code & LA-33K dataset.
 
 ---
 
 ## 📑 Table of Contents
 
-- [⚙️ Installation](#️-installation)
-- [🧠 LA Pre-training](#-la-pre-training)
-  - [Step 1: Dataset Configuration](#step-1-dataset-configuration)
-  - [Step 2: Compute Normalization Statistics](#step-2-compute-normalization-statistics)
-  - [Step 3: Start LA Pre-training](#step-3-start-la-pre-training)
-  - [Disabling Vision Masking (Standard VLA Training)](#disabling-vision-masking-standard-vla-training)
-  - [Mixed LA + VLA Training](#mixed-la--vla-training)
-- [🙏 Acknowledgements](#-acknowledgements)
+- [LA4VLA](#la4vla)
+  - [📰 News](#-news)
+  - [📑 Table of Contents](#-table-of-contents)
+  - [⚙️ Installation](#️-installation)
+  - [🧠 LA Pre-training](#-la-pre-training)
+    - [Step 1: Dataset Configuration](#step-1-dataset-configuration)
+      - [1.1 Download LA-33K](#11-download-la-33k)
+      - [1.2 Update the config file](#12-update-the-config-file)
+    - [Step 2: Compute Normalization Statistics](#step-2-compute-normalization-statistics)
+    - [Step 3: Start LA Pre-training](#step-3-start-la-pre-training)
+      - [Stage 1 — Action Head Warm-up (vision masked)](#stage-1--action-head-warm-up-vision-masked)
+      - [Stage 2 — Language Model Finetuning (vision masked)](#stage-2--language-model-finetuning-vision-masked)
+      - [(Optional) Resuming a Training Run](#optional-resuming-a-training-run)
+    - [Disabling Vision Masking (Standard VLA Training)](#disabling-vision-masking-standard-vla-training)
+    - [Mixed LA + VLA Training](#mixed-la--vla-training)
+      - [Per-sample vision masking policies](#per-sample-vision-masking-policies)
+      - [Dataset config for mixed training](#dataset-config-for-mixed-training)
+      - [Training command](#training-command)
+  - [📄 Citation](#-citation)
+  - [🙏 Acknowledgements](#-acknowledgements)
 
 ---
 
@@ -133,6 +163,7 @@ python -m dataset.compute_normstats_streaming dataset/config.yaml --action_horiz
 3. For multi-GPU training, set `--num_processes` to the number of GPUs (e.g., 8).
 
 > 💡 The commands below demonstrate the **LA pre-training** pipeline using LA-33K. During LA pre-training, the vision encoder is masked (`--vision_masked`) so the model learns to ground language instructions into action predictions **without** visual input. See [Disabling Vision Masking](#disabling-vision-masking-standard-vla-training) for standard VLA training.
+> 💡 Cache directory (`--cache_dir`) is used to store preprocessed dataset files for faster loading. It will save the processed dataset for all datasets in the config file, and unify them as a whole. So change it when you use different dataset soups.
 
 #### Stage 1 — Action Head Warm-up (vision masked)
 
@@ -336,6 +367,11 @@ data_groups:
         ...
 ```
 
+Key explanations:
+- **`--use_delta_action`**: transforms absolute actions into delta actions (relative to the current state). If your dataset already contains delta actions, set this to `False` is enough. Otherwise, if you want to 
+- **`--process_suite`**: specifies the processing suite for each dataset. We provide built-in suites for common datasets (e.g., `droid_eef` for DROID, `franka_ee_pose` for LIBERO). If your dataset is custom, you can implement a new suite. Examples are provided in [dataset_process_suite file](LA4VLA_1B\dataset\dataset_process_suite.py).
+- **`--suite_config`**: optional; if not provided, the default suite config will be used. You can specify custom state/action keys if your dataset has a slightly different structure than the suite's default configuration.
+
 #### Training command
 
 ```bash
@@ -359,11 +395,13 @@ accelerate launch --num_processes 1 --num_machines 1 \
     --vlm_name OpenGVLab/InternVL3-1B \
     --dataset_config_path dataset/your_mixed_config.yaml \
     --per_action_dim 24 --state_dim 24 \
-    --save_dir /your/path/to/checkpoints/mixed_training
+    --save_dir /your/path/to/checkpoints/mixed_training \
+    --resume --resume_pretrain \
+    --resume_path /your/path/to/checkpoints/stage1/step_xxx
 ```
 
 Key flags explained:
-- **`--vision_masked_policy by_dataset_key`**: samples from LA datasets have vision masked; samples from VLA datasets receive full visual input.
+- **`--vision_masked_policy by_dataset_key`**: **You Don't need to modify this parameter.** Current setting means samples from LA datasets have vision masked; samples from VLA datasets receive full visual input.
 - **`--la_dataset_keys la33k`**: specifies which dataset keys (matching the names in `config.yaml`) are treated as LA data. Multiple keys can be provided (space-separated).
 - **`--mix_ratio_droid 0.5`**: uses a `WeightedRandomSampler` to balance the batch composition — `0.5` means each batch is expected to contain 50% LA samples and 50% VLA samples, regardless of the underlying dataset sizes.
 
